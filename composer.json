@@ -1,0 +1,33 @@
+{
+    "name": "oktopost/performance",
+    "type": "library",
+    "license": "MIT",
+    "authors":
+    [
+        {
+            "name": "Alexey Puchkov",
+            "email": "alexey@oktopost.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": 
+    {
+        "unstable-cacao/traitor": "^1.0"
+    },
+    "require-dev":
+    {
+        "phpunit/phpunit": "^6.1"
+    },
+    "autoload":
+    {
+		"psr-0":
+        {
+			"Performance": "src"
+		}
+	},
+	"scripts":
+    {
+		"test": "./vendor/bin/phpunit",
+        "test-cover": "./vendor/phpunit/phpunit/phpunit --coverage-html ./build/cover"
+	}
+}
