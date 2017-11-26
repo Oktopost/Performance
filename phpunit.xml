@@ -1,6 +1,11 @@
 <phpunit bootstrap="tests/boot.php">
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src/</directory>
+        </whitelist>
+    </filter>
     <testsuites>
-        <testsuite name="Annotation">
+        <testsuite name="Performance">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

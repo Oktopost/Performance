@@ -62,8 +62,8 @@ class Watch implements IWatch
 	{
 		if (!$tags) return;
 		
-		$object->tag = isset($object->tag) ?
-			array_merge($object->tag, $tags) : 
+		$object->tags = isset($object->tags) ?
+			array_merge($object->tags, $tags) : 
 			$tags;
 	}
 	
@@ -164,6 +164,11 @@ class Watch implements IWatch
 	{
 		$this->data->tags = $this->data->tags ?? (object)[];
 		
+		if (count($value) == 1 && is_array($value[0]))
+		{
+			$value = $value[0];
+		}
+		
 		if (isset($this->data->tags->$key))
 		{
 			if (is_array($this->data->tags->$key))
@@ -182,7 +187,7 @@ class Watch implements IWatch
 	}
 	
 	/**
-	 * Store the end time for the event identified by group/key or group if key is not set.
+	 * Store the start time for the event identified by group/key or group if key is not set.
 	 * @param string $group
 	 * @param string|array|null $key If array, $keys will be treated as tags.
 	 * @param array|null $tags Optional tags to add to the event.
@@ -222,6 +227,8 @@ class Watch implements IWatch
 		{
 			$data = $this->groupsMap[$group][$key];
 			$this->setEndTime($data);
+			
+			unset($this->groupsMap[$group][$key]);
 		}
 		else
 		{
