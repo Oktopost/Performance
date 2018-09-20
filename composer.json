@@ -21,14 +21,14 @@
     },
     "autoload":
     {
-		"psr-0":
+		"psr-4":
         {
-			"Performance": "src"
+			"Performance\\": "Source"
 		}
 	},
 	"scripts":
     {
 		"test": "./vendor/bin/phpunit",
-        "test-cover": "./vendor/phpunit/phpunit/phpunit --coverage-html ./build/cover"
+        "test-cover": "./vendor/phpunit/phpunit/phpunit --coverage-html ./Build/cover"
 	}
 }

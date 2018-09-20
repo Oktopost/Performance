@@ -1,15 +1,15 @@
-<phpunit bootstrap="tests/boot.php">
+<phpunit bootstrap="Tests/boot.php">
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src/</directory>
+            <directory suffix=".php">./Source/</directory>
         </whitelist>
     </filter>
     <testsuites>
         <testsuite name="Performance">
-            <directory>tests</directory>
+            <directory>Tests</directory>
         </testsuite>
     </testsuites>
     <logging>
-         <log type="coverage-clover" target="build/logs/clover.xml"/>
+         <log type="coverage-clover" target="Build/logs/clover.xml"/>
     </logging>
 </phpunit>
