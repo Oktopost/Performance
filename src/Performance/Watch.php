@@ -40,10 +40,7 @@ class Watch implements IWatch
 		$object->readable_start_time	= $this->getMySQLDateTime($startTime);
 		$object->unix_start_time		= $startTime;
 		$object->start_time				= $this->startTime ? round($startTime - $this->startTime, 4) : null;
-		$object->readable_end_time		= null;
-		$object->unix_end_time			= null;
 		$object->end_time				= null;
-		$object->run_time				= null;
 		
 		return $object;
 	}
@@ -51,11 +48,7 @@ class Watch implements IWatch
 	private function setEndTime(\stdClass $object): void
 	{
 		$endTime = $this->getTime();
-		
-		$object->readable_end_time	= $this->getMySQLDateTime($endTime);
-		$object->unix_end_time		= $endTime;
-		$object->end_time			= $this->startTime ? round($endTime - $this->startTime, 4) : null;
-		$object->run_time			= $endTime - $object->unix_start_time;
+		$object->end_time = $this->startTime ? round($endTime - $this->startTime, 4) : null;
 	}
 	
 	private function addTags(\stdClass $object, ?array $tags = null): void
@@ -242,10 +235,7 @@ class Watch implements IWatch
 			$data->readable_start_time	= null;
 			$data->unix_start_time		= null;
 			$data->start_time			= null;
-			$data->readable_end_time	= $this->getMySQLDateTime($endTime);
-			$data->unix_end_time		= $endTime;
 			$data->end_time				= $this->startTime ? round($endTime - $this->startTime, 4) : null;
-			$data->run_time				= null;
 			
 			$this->data->{$group}[] = $data;
 		}

@@ -349,23 +349,25 @@ class WatchTest extends TestCase
 	{
 		$subject = new Watch();
 		
+		$subject->init();
 		$subject->start('a');
 		$subject->start('a');
 		$subject->stop('a');
 		
-		self::assertNull($subject->getRecords()->a[0]->unix_end_time);
-		self::assertNotNull($subject->getRecords()->a[1]->unix_end_time);
+		self::assertNull($subject->getRecords()->a[0]->end_time);
+		self::assertNotNull($subject->getRecords()->a[1]->end_time);
 	}
 	
 	public function test_stop_StartCalledForDifferentGroup_NewObjectUsed()
 	{
 		$subject = new Watch();
 		
+		$subject->init();
 		$subject->start('b');
 		$subject->stop('a');
 		
-		self::assertNull($subject->getRecords()->b[0]->unix_end_time);
-		self::assertNotNull($subject->getRecords()->a[0]->unix_end_time);
+		self::assertNull($subject->getRecords()->b[0]->end_time);
+		self::assertNotNull($subject->getRecords()->a[0]->end_time);
 	}
 	
 	public function test_stop_StartCalled_SameObjectUsed()
@@ -391,37 +393,40 @@ class WatchTest extends TestCase
 	{
 		$subject = new Watch();
 		
+		$subject->init();
 		$subject->start('a', 'c');
 		$subject->stop('a', 'c');
 		
-		self::assertNotNull($subject->getRecords()->a[0]->unix_end_time);
+		self::assertNotNull($subject->getRecords()->a[0]->end_time);
 	}
 	
 	public function test_stop_StartCalledWithNumberOfKeys_StopAppliedOnSameKey()
 	{
 		$subject = new Watch();
 		
+		$subject->init();
 		$subject->start('a', 'b');
 		$subject->start('a', 'c');
 		$subject->stop('a', 'c');
 		
 		
-		self::assertNull($subject->getRecords()->a[0]->unix_end_time);
+		self::assertNull($subject->getRecords()->a[0]->end_time);
 		
 		self::assertEquals('c', $subject->getRecords()->a[1]->key);
-		self::assertNotNull($subject->getRecords()->a[1]->unix_end_time);
+		self::assertNotNull($subject->getRecords()->a[1]->end_time);
 	}
 	
 	public function test_stop_StartCalledWithSameKeyNumberOfTimes_StopAppliedOnLastObject()
 	{
 		$subject = new Watch();
 		
+		$subject->init();
 		$subject->start('a', 'b');
 		$subject->start('a', 'b');
 		$subject->stop('a', 'b');
 		
-		self::assertNull($subject->getRecords()->a[0]->unix_end_time);
-		self::assertNotNull($subject->getRecords()->a[1]->unix_end_time);
+		self::assertNull($subject->getRecords()->a[0]->end_time);
+		self::assertNotNull($subject->getRecords()->a[1]->end_time);
 	}
 	
 	public function test_stop_StopCalledTwice_NewObjectCreatedOnSecondTime()
@@ -441,15 +446,15 @@ class WatchTest extends TestCase
 	{
 		$subject = new Watch();
 		
-		$now = microtime(true);
+		$subject->init();
 		
 		$subject->start('a');
+		usleep(1000);
 		$subject->stop('a');
 		
 		$records = $subject->getRecords()->a[0];
 		
-		self::assertEquals($now, $records->unix_end_time, '', 0.01);
-		self::assertEquals($now, strtotime($records->readable_end_time), '', 1);
+		self::assertEquals(0.01, $records->end_time, '', 0.009);
 	}
 	
 	public function test_stop_ObjectWasInitialized_RelativeTimesSet()
@@ -467,8 +472,6 @@ class WatchTest extends TestCase
 		$records = $subject->getRecords()->a[0];
 		
 		self::assertTrue(1.0 > $records->start_time && $records->start_time > 0.0);
-		self::assertTrue(1.0 > $records->run_time && $records->run_time > 0.0);
-		self::assertTrue($records->run_time > $records->start_time);
 	}
 	
 	public function test_stop_TagsPassedOnlyInStop_TagsAppended()
@@ -576,16 +579,15 @@ class WatchTest extends TestCase
 	{
 		$subject = new Watch();
 		
-		
+		$subject->init();
 		$subject->loop('a');
 		
-		usleep(100);
-		$now = microtime(true);
+		usleep(1000);
 		$subject->loop('a');
 		
 		$records = $subject->getRecords()->a[0];
 		
-		self::assertEquals($now, $records->unix_end_time, '', 0.01);
+		self::assertEquals(0.01, $records->end_time, '', 0.009);
 	}
 	
 	public function test_endLoop_LoopNotStarted_NoError()
@@ -601,15 +603,15 @@ class WatchTest extends TestCase
 	{
 		$subject = new Watch();
 		
+		$subject->init();
 		$subject->loop('a');
 		
-		usleep(100);
-		$now = microtime(true);
+		usleep(1000);
 		$subject->endLoop('a');
 		
 		$records = $subject->getRecords()->a[0];
 		
-		self::assertEquals($now, $records->unix_end_time, '', 0.01);
+		self::assertEquals(0.01, $records->end_time, '', 0.009);
 	}
 	
 	public function test_endLoop_EndLoopCalledMorThenOnce_consecutiveCallsIgnored()
@@ -619,13 +621,13 @@ class WatchTest extends TestCase
 		$subject->loop('a');
 		$subject->endLoop('a');
 		
-		$endTime = $subject->getRecords()->a[0]->unix_end_time;
+		$endTime = $subject->getRecords()->a[0]->end_time;
 		
 		usleep(1000);
 		$subject->endLoop('a');
 		
 		self::assertCount(1, $subject->getRecords()->a);
-		self::assertEquals($endTime, $subject->getRecords()->a[0]->unix_end_time);
+		self::assertEquals($endTime, $subject->getRecords()->a[0]->end_time);
 	}
 	
 	
